@@ -1,0 +1,18 @@
+.table {
+   table-layout: fixed;    
+}
+
+.text_cell_td {
+    white-space: nowrap;
+}
+
+.text_cell_div {
+    overflow-x: auto;
+}
+.text_cell_div_small {
+    overflow-x: auto;
+}
+
+.table thead th {
+   width: min-content;
+}
