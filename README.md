@@ -1,37 +1,52 @@
-## Welcome to GitHub Pages
+# packpng.com rewrite
+[![Coverage Status](https://coveralls.io/repos/github/laundmo/packpng/badge.svg?branch=master&service=github)](https://coveralls.io/github/laundmo/packpng?branch=master) [![Build Status](https://travis-ci.com/laundmo/packpng.svg?branch=master)](https://travis-ci.com/laundmo/packpng)
 
-You can use the [editor on GitHub](https://github.com/Lightbourne/the-100-anomaly/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+because the original page was made in a website builder
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## how to run
 
-### Markdown
+you need a recent python 3, i tested on 3.8.0
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+first install requirements `pip install -r requirements.txt`
 
-```markdown
-Syntax highlighted code block
+run file `python run.py`
 
-# Header 1
-## Header 2
-### Header 3
+now you can access the page on localhost. the server will restart if it detects changes in existing files.
 
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+## directory structure
 ```
+packpng/
+├───app/                    main code files
+│   ├───static/             static files such as css, js, images
+│   │   ├───gallery/        gallery images
+│   │   └───thumbnails/     thumbnails for the gallery images
+│   └───templates/          jinja2 templates
+├───data/                   json and other data files, used for templates
+└───tests/                  tests folder
+```
+## writing templates/pages.
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+you have to add a path to the page in app/main.py. the basic structure of this is
+```python
+@main_blueprint.route("/mypage") # the path to the page
+def mypage(): # function doesnt have to be the same name as route
+    a = [1,2,3] # example variable
+    return render_template("mypage.html", a=a) # render the template named "mypage.html" from the templates folder, and pass the value of "a" with the name "a" to the template
+```
+[related flask quickstart](https://flask.palletsprojects.com/en/1.1.x/quickstart/#routing)
 
-### Jekyll Themes
+then you have to add the page to the navbar, if it should appear there.
+go to `app/templates/layout.html` and look at the top of the file. add a new element to the list like this `('main_blueprint.mypage', 'mypage', 'My Page'),`, the first string is the name of the python function + blueprint, the second the arbitrary name used to set the active navbar page, and the last the display name.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Lightbourne/the-100-anomaly/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+make sure to set the correct active page in your template using `{% set active_page = "mypage" %}`. here we use the arbitrary name we defined before
 
-### Support or Contact
+link to pages with `{{ url_for('blueprint.function') }}` and to static files with `{{ url_for('static', filename='pack.png') }}`
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+
+## Pushing Updates
+
+Make a pull request into the "deploy" branch. 
+
+Then the server should grab the changes from the deploy branch and restart, once the pull request is accepted/merged.
+
+Do not deploy too often, and make sure that all tests have run before merging!
