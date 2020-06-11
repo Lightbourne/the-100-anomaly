@@ -1,0 +1,86 @@
+{% set navigation_bar = [
+    ('main.index',          'index',        'The Project'),
+    ('main.details',        'details',      'Details'),
+    ('main.faq',            'faq',          'FAQ'),
+    ('main.contributors',   'contributors', 'Contributors'),
+    ('main.timeline',       'timeline',     'Timeline'),
+    ('main.roadmap',        'roadmap',      'Roadmap'),
+    ('main.method',     'method',   'Methodology'),
+    ('main.gallery',        'gallery',      'Gallery'),
+    ('main.about',          'about',        'About')
+] -%}
+{#
+    this adds pages to the navbar. the pages need to have a route in the main.py first. the first part is the name of the function in main.py, the secodn one is the display name 
+#}
+
+{% set active_page = active_page|default('project') -%}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>pack.png</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico')}}">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+        {% block head %}
+
+        {%endblock%}
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="/">
+                <img src="{{ url_for('static', filename='pack.png') }}" width="30" height="30"
+                    class="navbar-toggler-icon" alt="">
+                pack.png
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar"
+                aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="navbar-nav">
+                    {% for funcname, name, caption in navigation_bar %}
+                    <li class="nav-item {% if name == active_page %}active{% endif
+                        %}">
+                        <a class="nav-link"
+                            href="{{ url_for(funcname) }}">{{ caption|e }}{% if name == active_page %}<span
+                                class="sr-only">(current)</span>{% endif %}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </nav>
+        <div style="position: fixed; bottom: -5px; right: 0; z-index: 999;">
+            <iframe class="collapse show" id="discord-collapsible" frameBorder="0" style="height:50vh;"
+                src="https://discordapp.com/widget?id=436405308458401803&theme=dark">
+            </iframe>
+            <button type="button" class="text-danger close float-left" aria-label="Close" data-toggle="collapse"
+                href="#discord-collapsible" role="button" aria-expanded="false" aria-controls="discord-collapsible">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="container p-0">
+            <div class="row no-gutters">
+                <div class="col-xs-12 p-0 w-100">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+        {% block nocenter %}
+        {% endblock %}
+    </body>
+
+</html>
